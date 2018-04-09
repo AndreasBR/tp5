@@ -1,0 +1,19 @@
+---
+- hosts: WordPress
+  remote_user: andreas
+  become: yes
+  tasks:
+    - name: "Executa o container Mariadb"
+      docker_container:
+        name: wordpressdb
+        image: mariadb:latest
+        env:
+          MYSQL_ROOT_PASSWORD: P@ssw0rd
+    - name: "Executa o container WordPress"
+      docker_container:
+        name: wordpress
+        image: wordpress
+        links:
+          - "wordpressdb:mariadb"
+        ports:
+          - "80:80"
